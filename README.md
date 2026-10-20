@@ -14,6 +14,8 @@ mvn quarkus:dev
 
 Servicio: `http://localhost:8080`
 
+En perfiles `dev` y `prod`, configura `AUTH_JWT_PRIVATE_KEY_PATH` con la ruta a una clave privada RSA PEM. La API de requisitos debe usar la clave pública correspondiente mediante `AUTH_JWT_PUBLIC_KEY_PATH`. `AUTH_JWT_ISSUER` y `AUTH_JWT_AUDIENCE` son opcionales y deben coincidir entre servicios; sus valores predeterminados son `workshop-auth` y `workshop-requirements-api`. Mantén ambas claves fuera del repositorio; Quarkus genera claves efímeras automáticamente en el perfil de test.
+
 Credenciales locales:
 
 - `student` / `Workshop123!`
@@ -26,4 +28,4 @@ Credenciales locales:
 
 ## Propósito de la rama `main`
 
-La rama contiene deuda técnica y de seguridad deliberada: SQL concatenado, contraseñas en texto plano, token reversible, secreto hardcodeado, CORS permisivo, método largo, manejo genérico de excepciones y dependencias con CVEs.
+El backend conserva deuda técnica y de seguridad deliberada: SQL concatenado, contraseñas en texto plano, CORS permisivo, método largo, manejo genérico de excepciones y dependencias con CVEs. Los tokens de sesión se firman con RS256 y requieren una clave externa.
