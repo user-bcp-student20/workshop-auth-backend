@@ -2,13 +2,14 @@
 
 ## Why
 
-GitHub Issue [#11](https://github.com/user-bcp-student24/workshop-auth-backend/issues/11), titled `HU-01 - Issue`, covers the signed authentication token. Its committed scope is to ensure token integrity and expiration, and to keep the signing secret externally configurable. These guarantees matter because clients must not accept modified or expired authentication tokens.
+GitHub Issue [#13](https://github.com/user-bcp-student20/workshop-auth-backend/issues/13), titled `H-03 - Emitir tokens de login firmados y verificables`, requires signed login tokens with the minimum `sub`, `client`, `iat`, and `exp` claims, and rejection of altered or expired tokens. The signing secret remains externally configured so clients can verify token integrity without embedding key material in production code.
 
 ## What Changes
 
 ### Scope
 
 - Replace the documented unsigned Base64 token value with a signed token whose integrity and expiration can be verified using an externally configured signing secret.
+- Include the request's optional `client` value as a token claim; when omitted, preserve the required claim with an empty string.
 - Require verification to reject altered and expired tokens.
 - Preserve the documented `POST /auth/login` route, request behavior, response structure, and established error behavior. The `token` field remains, but its value semantics change as required by the Issue.
 

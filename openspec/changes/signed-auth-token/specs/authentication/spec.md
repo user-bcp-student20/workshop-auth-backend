@@ -39,6 +39,17 @@ The system SHALL issue tokens whose signatures can be verified using the externa
 - **WHEN** valid credentials produce a token under external test configuration
 - **THEN** the token verifier accepts the token using that configured test secret and the token is not expired
 
+### Requirement: Issued tokens include the minimum login claims
+The system SHALL include `sub`, `client`, `iat`, and `exp` claims in each issued login token. The `client` claim SHALL contain the request value or an empty string when the optional request field is omitted.
+
+#### Scenario: Login includes a client value in the token
+- **WHEN** a client submits valid credentials and a `client` value to `POST /auth/login`
+- **THEN** the issued token contains that value in its `client` claim
+
+#### Scenario: Login omits the optional client value
+- **WHEN** a client submits valid credentials without the optional `client` field
+- **THEN** the issued token contains an empty-string `client` claim
+
 ### Requirement: Token verification rejects altered and expired tokens
 The system SHALL reject a token when its contents have been altered or its expiration has passed.
 

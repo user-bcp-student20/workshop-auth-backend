@@ -40,6 +40,7 @@ class AuthResourceTest {
         assertEquals("workshop-auth-backend", decoded.getIssuer());
         assertTrue(decoded.getAudience().contains("workshop-requirements-api"));
         assertEquals("student", decoded.getSubject());
+        assertEquals("angular-workshop", decoded.getClaim("client").asString());
         assertEquals("STUDENT", decoded.getClaim("role").asString());
         assertNotNull(decoded.getExpiresAt());
         assertTrue(decoded.getExpiresAt().after(new Date()));
@@ -54,7 +55,7 @@ class AuthResourceTest {
             }
         }, LegacyDatabase.class);
 
-        given()
+        String token = given()
                 .contentType("application/json")
                 .body("{\"username\":\"student\",\"password\":\"Workshop123!\",\"unexpected\":true}")
                 .when().post("/auth/login")
@@ -65,7 +66,11 @@ class AuthResourceTest {
                 .body("user.role", is("STUDENT"))
                 .body("expiresIn", is(3600))
                 .body("debug", is("authenticated-with-legacy-flow"))
-                .body("token", notNullValue());
+                .body("token", notNullValue())
+                .extract().path("token");
+
+        DecodedJWT decoded = JWT.require(Algorithm.HMAC256(TEST_TOKEN_SECRET)).build().verify(token);
+        assertEquals("", decoded.getClaim("client").asString());
     }
 
             @Test
@@ -123,7 +128,7 @@ class AuthResourceTest {
     void returnsDocumentedServerErrorFieldsWhenTokenIssuanceFails() {
         QuarkusMock.installMockForType(new AuthTokenService() {
             @Override
-            public String create(String username, String role) {
+            public String create(String username, String client, String role) {
                 throw new IllegalStateException("Controlled token failure");
             }
         }, AuthTokenService.class);
