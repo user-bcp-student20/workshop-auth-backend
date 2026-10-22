@@ -28,13 +28,14 @@ class AuthTokenServiceTest {
 
     @Test
     void verifiesIssuedTokenWithConfiguredTestSecretAndExpectedClaims() {
-        String token = tokenService.create("student", "STUDENT");
+        String token = tokenService.create("student", "angular-workshop", "STUDENT");
 
         DecodedJWT verified = tokenService.verify(token);
 
         assertEquals(ISSUER, verified.getIssuer());
         assertTrue(verified.getAudience().contains(AUDIENCE));
         assertEquals("student", verified.getSubject());
+        assertEquals("angular-workshop", verified.getClaim("client").asString());
         assertEquals("STUDENT", verified.getClaim("role").asString());
         assertNotNull(verified.getExpiresAt());
         assertTrue(verified.getExpiresAt().after(new Date()));
@@ -42,7 +43,7 @@ class AuthTokenServiceTest {
 
     @Test
     void rejectsModifiedSignature() {
-        String[] parts = tokenService.create("student", "STUDENT").split("\\.");
+        String[] parts = tokenService.create("student", "angular-workshop", "STUDENT").split("\\.");
         char replacement = parts[2].charAt(0) == 'A' ? 'B' : 'A';
         parts[2] = replacement + parts[2].substring(1);
 

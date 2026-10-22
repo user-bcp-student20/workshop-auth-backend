@@ -59,6 +59,12 @@ Continue using `AUTH_TOKEN_SECRET` through the existing configuration key. Keep 
 
 **Alternatives considered:** An inline fallback makes local startup easier but risks silently issuing tokens under a known or shared key. Secret rotation and multiple active keys are not required for this change.
 
+### Preserve the optional login client in token claims
+
+Include the request's `client` value in the signed token. If the optional field is absent, encode it as an empty string so every issued token still carries the required `client` claim without changing request validation or making the field mandatory.
+
+**Alternatives considered:** Omitting the claim when the field is absent would violate the Issue's minimum-claims criterion. Requiring `client` would change the established login request contract.
+
 ### Do not accept legacy unsigned tokens
 
 Verification must reject tokens that lack a valid signature or have expired. Do not introduce a compatibility branch that accepts the old unsigned Base64 format; it would defeat the integrity requirement. The response shape remains compatible, but token consumers that decode or depend on the legacy format need coordinated migration.

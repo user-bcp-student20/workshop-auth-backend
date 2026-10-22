@@ -26,12 +26,13 @@ public class AuthTokenService {
         }
     }
 
-    public String create(String username, String role) {
+    public String create(String username, String client, String role) {
         Instant now = Instant.now();
         return JWT.create()
                 .withIssuer(TOKEN_ISSUER)
                 .withAudience(TOKEN_AUDIENCE)
                 .withSubject(username)
+                .withClaim("client", client == null ? "" : client)
                 .withClaim("role", role)
                 .withIssuedAt(Date.from(now))
                 .withExpiresAt(Date.from(now.plusSeconds(TOKEN_TTL_SECONDS)))

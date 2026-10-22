@@ -39,7 +39,7 @@ public class AuthResource {
                         if (user == null) {
                             return Response.status(401).entity(Map.of("message", "Invalid user " + request.username + " or password")).build();
                         } else {
-                            String token = tokenService.create(user.username(), user.role());
+                            String token = tokenService.create(user.username(), request.client, user.role());
                             Map<String, Object> response = new HashMap<>();
                             response.put("token", token);
                             response.put("expiresIn", AuthTokenService.TOKEN_TTL_SECONDS);

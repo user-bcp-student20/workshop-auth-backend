@@ -11,6 +11,7 @@
 - [x] 2.1 Complete token verification in the existing authentication service using the current JWT library and externally configured secret; enforce the expected signing algorithm, issuer, audience, and expiration. Verify a newly issued token with the test-profile secret and expected claims using `mvn test -Dtest=AuthResourceTest,AuthTokenServiceTest`.
 - [x] 2.2 Add negative verifier tests for a modified token, an expired token, and a token signed with a different secret; verify each is rejected with `mvn test -Dtest=AuthTokenServiceTest`.
 - [x] 2.3 Verify signing-secret configuration remains external: test that the configured test secret validates an issued token, blank configuration fails closed, and production code/configuration contains no embedded signing secret. Verify with the focused token/configuration tests and a source review.
+- [x] 2.4 Include the optional login `client` value in each issued token and preserve the required claim as an empty string when omitted. Verify both request cases with the focused resource and token-service tests.
 
 ## 3. Integrated Verification
 
